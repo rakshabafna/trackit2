@@ -14,16 +14,342 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      group_members: {
+        Row: {
+          group_id: string
+          joined_at: string | null
+          student_id: string
+        }
+        Insert: {
+          group_id: string
+          joined_at?: string | null
+          student_id: string
+        }
+        Update: {
+          group_id?: string
+          joined_at?: string | null
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_mentors: {
+        Row: {
+          group_id: string
+          mentor_id: string
+        }
+        Insert: {
+          group_id: string
+          mentor_id: string
+        }
+        Update: {
+          group_id?: string
+          mentor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_mentors_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      groups: {
+        Row: {
+          code: string
+          created_at: string | null
+          id: string
+          name: string
+          semester: number | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          id?: string
+          name: string
+          semester?: number | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+          semester?: number | null
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          file_url: string | null
+          group_id: string | null
+          id: string
+          sender_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          file_url?: string | null
+          group_id?: string | null
+          id?: string
+          sender_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          file_url?: string | null
+          group_id?: string | null
+          id?: string
+          sender_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notices: {
+        Row: {
+          content: string
+          created_at: string | null
+          created_by: string | null
+          file_url: string | null
+          group_id: string | null
+          id: string
+          is_pinned: boolean | null
+          title: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          created_by?: string | null
+          file_url?: string | null
+          group_id?: string | null
+          id?: string
+          is_pinned?: boolean | null
+          title: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          created_by?: string | null
+          file_url?: string | null
+          group_id?: string | null
+          id?: string
+          is_pinned?: boolean | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notices_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          name: string | null
+          semester: number | null
+        }
+        Insert: {
+          avatar?: string | null
+          created_at?: string | null
+          email?: string | null
+          id: string
+          name?: string | null
+          semester?: number | null
+        }
+        Update: {
+          avatar?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name?: string | null
+          semester?: number | null
+        }
+        Relationships: []
+      }
+      submissions: {
+        Row: {
+          feedback: string | null
+          file_url: string
+          grade: number | null
+          group_id: string | null
+          id: string
+          rubric: Json | null
+          student_id: string | null
+          student_name: string | null
+          submitted_at: string | null
+          task_id: string | null
+        }
+        Insert: {
+          feedback?: string | null
+          file_url: string
+          grade?: number | null
+          group_id?: string | null
+          id?: string
+          rubric?: Json | null
+          student_id?: string | null
+          student_name?: string | null
+          submitted_at?: string | null
+          task_id?: string | null
+        }
+        Update: {
+          feedback?: string | null
+          file_url?: string
+          grade?: number | null
+          group_id?: string | null
+          id?: string
+          rubric?: Json | null
+          student_id?: string | null
+          student_name?: string | null
+          submitted_at?: string | null
+          task_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submissions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "submissions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      task_assignees: {
+        Row: {
+          student_id: string
+          task_id: string
+        }
+        Insert: {
+          student_id: string
+          task_id: string
+        }
+        Update: {
+          student_id?: string
+          task_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_assignees_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tasks: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          due_date: string | null
+          file_urls: string[] | null
+          group_id: string | null
+          id: string
+          semester: number | null
+          status: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          due_date?: string | null
+          file_urls?: string[] | null
+          group_id?: string | null
+          id?: string
+          semester?: number | null
+          status?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          due_date?: string | null
+          file_urls?: string[] | null
+          group_id?: string | null
+          id?: string
+          semester?: number | null
+          status?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "student" | "mentor" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +476,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["student", "mentor", "admin"],
+    },
   },
 } as const
