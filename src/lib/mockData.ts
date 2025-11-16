@@ -315,3 +315,15 @@ export const mockMessages: Message[] = [
     timestamp: "2024-11-16T15:00:00"
   }
 ];
+
+export const studentProgress = {
+  completed: 68,
+  pending: 25,
+  overdue: 7,
+  semesterProgress: [50, 68, 80, 90],
+  tasksByStatus: {
+    todo: 8,
+    submitted: 15,
+    graded: 22
+  }
+};

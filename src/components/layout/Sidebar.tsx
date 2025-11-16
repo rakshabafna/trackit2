@@ -3,6 +3,7 @@ import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { CreateGroupModal } from "@/components/CreateGroupModal";
+import { JoinGroupModal } from "@/components/JoinGroupModal";
 import {
   LayoutDashboard,
   Users,
@@ -15,11 +16,13 @@ import {
   FileText,
   Plus,
   Send,
+  UserPlus,
 } from "lucide-react";
 
 export function Sidebar() {
   const { user, logout } = useAuth();
   const [createGroupOpen, setCreateGroupOpen] = useState(false);
+  const [joinGroupOpen, setJoinGroupOpen] = useState(false);
 
   const studentLinks = [
     { to: "/student/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -61,6 +64,18 @@ export function Sidebar() {
 
         {/* Navigation */}
         <nav className="flex-1 space-y-1 overflow-y-auto p-4">
+          {user?.role === "student" && (
+            <button
+              onClick={() => setJoinGroupOpen(true)}
+              className={cn(
+                "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              <UserPlus className="h-5 w-5" />
+              <span>Join Group</span>
+            </button>
+          )}
           {user?.role === "mentor" && (
             <button
               onClick={() => setCreateGroupOpen(true)}
@@ -112,6 +127,9 @@ export function Sidebar() {
 
       {user?.role === "mentor" && (
         <CreateGroupModal open={createGroupOpen} onOpenChange={setCreateGroupOpen} />
+      )}
+      {user?.role === "student" && (
+        <JoinGroupModal open={joinGroupOpen} onOpenChange={setJoinGroupOpen} />
       )}
     </aside>
   );
