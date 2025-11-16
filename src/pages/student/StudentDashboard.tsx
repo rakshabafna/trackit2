@@ -5,12 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { mockTasks, mockSubmissions, mockMessages, mockUsers } from "@/lib/mockData";
-import { Calendar, Clock, FileText, MessageSquare, Send } from "lucide-react";
-import { format } from "date-fns";
+import { mockTasks, mockSubmissions, mockMessages, mockUsers, Task, studentProgress } from "@/lib/mockData";
+import { Calendar, Clock, FileText, MessageSquare, Send, Upload, AlertCircle } from "lucide-react";
+import { format, isPast } from "date-fns";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { UploadAssignmentModal } from "@/components/UploadAssignmentModal";
 import {
   Table,
   TableBody,
@@ -19,17 +20,56 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, RadialLinearScale, PointElement, LineElement, Tooltip, Legend } from "chart.js";
+import { Doughnut, Bar, PolarArea } from "react-chartjs-2";
+
+ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, RadialLinearScale, PointElement, LineElement, Tooltip, Legend);
 
 export default function StudentDashboard() {
   const [message, setMessage] = useState("");
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
   const upcomingTasks = mockTasks
     .filter((t) => t.status !== "done" && new Date(t.dueDate) > new Date())
     .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
     .slice(0, 3);
 
   const pendingTasksCount = mockTasks.filter((t) => t.status === "todo").length;
-
   const studentSubmissions = mockSubmissions.filter((s) => s.studentId === "s1");
+
+  const handleUploadClick = (task: Task) => {
+    setSelectedTask(task);
+    setUploadModalOpen(true);
+  };
+
+  // Chart.js data with vibrant colors
+  const progressData = {
+    labels: ["Completed", "Pending", "Overdue"],
+    datasets: [{
+      data: [studentProgress.completed, studentProgress.pending, studentProgress.overdue],
+      backgroundColor: ["#10b981", "#f59e0b", "#ef4444"],
+      borderWidth: 0,
+    }]
+  };
+
+  const taskStatusData = {
+    labels: ["To Do", "Submitted", "Graded"],
+    datasets: [{
+      label: "Tasks",
+      data: [studentProgress.tasksByStatus.todo, studentProgress.tasksByStatus.submitted, studentProgress.tasksByStatus.graded],
+      backgroundColor: ["#3b82f6", "#f59e0b", "#8b5cf6"],
+    }]
+  };
+
+  const semesterData = {
+    labels: ["Sem 3", "Sem 4", "Sem 5", "Sem 6"],
+    datasets: [{
+      label: "Progress %",
+      data: studentProgress.semesterProgress,
+      backgroundColor: ["#3b82f6", "#10b981", "#f59e0b", "#ec4899"],
+    }]
+  };
 
   return (
     <DashboardLayout>
@@ -86,6 +126,113 @@ export default function StudentDashboard() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Tasks Assigned by Mentor */}
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-4">Tasks Assigned</h2>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {mockTasks.slice(0, 6).map((task) => {
+              const isOverdue = isPast(new Date(task.dueDate)) && task.status !== "done";
+              const mentor = mockUsers.find(u => u.role === "mentor");
+              
+              return (
+                <Card key={task.id} className="relative">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <CardTitle className="text-base">{task.title}</CardTitle>
+                      {isOverdue && (
+                        <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">by {mentor?.name}</p>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <span className={isOverdue ? "text-destructive font-medium" : "text-muted-foreground"}>
+                        {format(new Date(task.dueDate), "MMM dd, yyyy")}
+                      </span>
+                    </div>
+                    <Badge variant={
+                      task.status === "done" ? "default" : 
+                      task.status === "in-progress" ? "secondary" : 
+                      "outline"
+                    }>
+                      {task.status === "done" ? "Graded" : 
+                       task.status === "review" ? "Submitted" : 
+                       "To Do"}
+                    </Badge>
+                    {task.status !== "done" && task.status !== "review" && (
+                      <Button 
+                        onClick={() => handleUploadClick(task)} 
+                        className="w-full" 
+                        size="sm"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload Assignment
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Colorful Progress Dashboard */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Your Project at a Glance</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-6 md:grid-cols-3">
+              <div>
+                <h3 className="text-sm font-medium mb-3 text-center">Project Progress</h3>
+                <Doughnut 
+                  data={progressData} 
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: { position: "bottom" },
+                      tooltip: { 
+                        callbacks: {
+                          label: (context) => `${context.label}: ${context.parsed}%`
+                        }
+                      }
+                    }
+                  }}
+                />
+              </div>
+              <div>
+                <h3 className="text-sm font-medium mb-3 text-center">Tasks by Status</h3>
+                <Bar 
+                  data={taskStatusData} 
+                  options={{
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                      y: { beginAtZero: true }
+                    }
+                  }}
+                />
+              </div>
+              <div>
+                <h3 className="text-sm font-medium mb-3 text-center">Semester Timeline</h3>
+                <Bar 
+                  data={semesterData} 
+                  options={{
+                    indexAxis: "y" as const,
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                      x: { beginAtZero: true, max: 100 }
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Tabs Section */}
         <Tabs defaultValue="kanban" className="space-y-4">
@@ -201,6 +348,12 @@ export default function StudentDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+
+      <UploadAssignmentModal 
+        open={uploadModalOpen} 
+        onOpenChange={setUploadModalOpen} 
+        task={selectedTask}
+      />
     </DashboardLayout>
   );
 }
