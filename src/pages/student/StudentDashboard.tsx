@@ -12,6 +12,8 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { UploadAssignmentModal } from "@/components/UploadAssignmentModal";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { toast } from "@/hooks/use-toast";
 import {
   Table,
   TableBody,
@@ -29,6 +31,7 @@ export default function StudentDashboard() {
   const [message, setMessage] = useState("");
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [leaveGroupOpen, setLeaveGroupOpen] = useState(false);
 
   const upcomingTasks = mockTasks
     .filter((t) => t.status !== "done" && new Date(t.dueDate) > new Date())
@@ -41,6 +44,14 @@ export default function StudentDashboard() {
   const handleUploadClick = (task: Task) => {
     setSelectedTask(task);
     setUploadModalOpen(true);
+  };
+
+  const handleLeaveGroup = () => {
+    toast({
+      title: "Left group successfully",
+      description: "Join another using a code.",
+    });
+    setLeaveGroupOpen(false);
   };
 
   // Chart.js data with vibrant colors
@@ -74,9 +85,14 @@ export default function StudentDashboard() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground">Track your projects and deadlines</p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+            <p className="text-muted-foreground">Track your projects and deadlines</p>
+          </div>
+          <Button variant="destructive" size="sm" onClick={() => setLeaveGroupOpen(true)}>
+            Leave Group
+          </Button>
         </div>
 
         {/* Quick View Grid */}
@@ -354,6 +370,23 @@ export default function StudentDashboard() {
         onOpenChange={setUploadModalOpen} 
         task={selectedTask}
       />
+
+      <AlertDialog open={leaveGroupOpen} onOpenChange={setLeaveGroupOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Leave Group?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to leave your current group? You'll need a new code to join another group.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleLeaveGroup} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Leave Group
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </DashboardLayout>
   );
 }

@@ -13,6 +13,8 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 
 // Student Pages
 import StudentDashboard from "./pages/student/StudentDashboard";
+import StudentTasks from "./pages/student/StudentTasks";
+import StudentSubmissions from "./pages/student/StudentSubmissions";
 
 // Mentor Pages
 import MentorDashboard from "./pages/mentor/MentorDashboard";
@@ -20,6 +22,7 @@ import MyGroups from "./pages/mentor/MyGroups";
 import Notices from "./pages/mentor/Notices";
 import AssignTask from "./pages/mentor/AssignTask";
 import Analytics from "./pages/mentor/Analytics";
+import MentorGroupChat from "./pages/mentor/MentorGroupChat";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -49,6 +52,22 @@ const App = () => (
               element={
                 <ProtectedRoute allowedRoles={["student"]}>
                   <StudentDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/tasks"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentTasks />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/submissions"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentSubmissions />
                 </ProtectedRoute>
               }
             />
@@ -91,6 +110,14 @@ const App = () => (
               element={
                 <ProtectedRoute allowedRoles={["mentor"]}>
                   <Analytics />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/mentor/chat"
+              element={
+                <ProtectedRoute allowedRoles={["mentor"]}>
+                  <MentorGroupChat />
                 </ProtectedRoute>
               }
             />
