@@ -28,7 +28,6 @@ export function Sidebar() {
     { to: "/student/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/student/tasks", icon: ClipboardList, label: "Tasks" },
     { to: "/student/submissions", icon: FileText, label: "Submissions" },
-    { to: "/student/groups", icon: Users, label: "My Groups" },
   ];
 
   const mentorLinks = [
@@ -37,6 +36,7 @@ export function Sidebar() {
     { to: "/mentor/notices", icon: Bell, label: "Notices" },
     { to: "/mentor/tasks/assign", icon: Send, label: "Assign Task" },
     { to: "/mentor/analytics", icon: BarChart3, label: "Analytics" },
+    { to: "/mentor/chat", icon: Users, label: "Group Chat" },
   ];
 
   const adminLinks = [
