@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Download, FileText, Award } from "lucide-react";
-import { mockSubmissions, mockTasks, Submission } from "@/lib/mockData";
+import { Submission } from "@/lib/mockData";
 import { GradingModal } from "./GradingModal";
 
 interface SubmissionsViewProps {
@@ -11,7 +11,7 @@ interface SubmissionsViewProps {
 }
 
 export function SubmissionsView({ groupId }: SubmissionsViewProps) {
-  const [submissions, setSubmissions] = useState<Submission[]>(mockSubmissions);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [gradingModalOpen, setGradingModalOpen] = useState(false);
 
@@ -20,8 +20,7 @@ export function SubmissionsView({ groupId }: SubmissionsViewProps) {
     : submissions;
 
   const getTaskTitle = (taskId: string) => {
-    const task = mockTasks.find((t) => t.id === taskId);
-    return task?.title || "Unknown Task";
+    return "Unknown Task";
   };
 
   const handleGradeClick = (submission: Submission) => {

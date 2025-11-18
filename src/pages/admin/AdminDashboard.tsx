@@ -1,18 +1,10 @@
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { mockGroups, mockTasks, mockUsers } from "@/lib/mockData";
 import { Users, FolderKanban, Activity, Download, Upload } from "lucide-react";
 import { toast } from "sonner";
 
 export default function AdminDashboard() {
-  const totalUsers = mockUsers.length;
-  const totalGroups = mockGroups.length;
-  const completionRate = Math.round(
-    (mockTasks.filter((t) => t.status === "done").length / mockTasks.length) * 100
-  );
-
   const handleExportPDF = () => {
     toast.success("Exporting dashboard as PDF...");
   };
@@ -57,9 +49,9 @@ export default function AdminDashboard() {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">{totalUsers}</div>
+              <div className="text-2xl font-bold text-foreground">0</div>
               <p className="text-xs text-muted-foreground">
-                {mockUsers.filter((u) => u.role === "student").length} Students, {mockUsers.filter((u) => u.role === "mentor").length} Mentors
+                0 Students, 0 Mentors
               </p>
             </CardContent>
           </Card>
@@ -70,9 +62,9 @@ export default function AdminDashboard() {
               <FolderKanban className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">{totalGroups}</div>
+              <div className="text-2xl font-bold text-foreground">0</div>
               <p className="text-xs text-muted-foreground">
-                {mockGroups.filter((g) => !g.isOverdue).length} On Track
+                0 On Track
               </p>
             </CardContent>
           </Card>
@@ -83,83 +75,19 @@ export default function AdminDashboard() {
               <Activity className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-success">{completionRate}%</div>
+              <div className="text-2xl font-bold text-success">100%</div>
               <p className="text-xs text-muted-foreground">Overall completion rate</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Heatmap */}
+        {/* Overview */}
         <Card>
           <CardHeader>
-            <CardTitle>Groups Heatmap</CardTitle>
+            <CardTitle>System Overview</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {mockGroups.map((group) => (
-                <div
-                  key={group.id}
-                  className={`rounded-lg border p-4 transition-colors ${
-                    group.progress >= 75
-                      ? "border-success bg-success/10"
-                      : group.progress >= 50
-                      ? "border-warning bg-warning/10"
-                      : "border-destructive bg-destructive/10"
-                  }`}
-                >
-                  <div className="mb-2 flex items-center justify-between">
-                    <h3 className="font-semibold text-foreground">{group.name}</h3>
-                    <Badge
-                      className={
-                        group.progress >= 75
-                          ? "bg-success text-success-foreground"
-                          : group.progress >= 50
-                          ? "bg-warning text-warning-foreground"
-                          : "bg-destructive text-destructive-foreground"
-                      }
-                    >
-                      {group.progress}%
-                    </Badge>
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    <p>Semester {group.semester}</p>
-                    <p>{group.students.length} Students</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Settings Placeholder */}
-        <Card>
-          <CardHeader>
-            <CardTitle>System Settings</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between rounded-lg border border-border p-4">
-              <div>
-                <p className="font-medium text-foreground">SMTP Configuration</p>
-                <p className="text-sm text-muted-foreground">Configure email server settings</p>
-              </div>
-              <Button variant="outline">Configure</Button>
-            </div>
-
-            <div className="flex items-center justify-between rounded-lg border border-border p-4">
-              <div>
-                <p className="font-medium text-foreground">Semester Settings</p>
-                <p className="text-sm text-muted-foreground">Manage academic calendar and semesters</p>
-              </div>
-              <Button variant="outline">Manage</Button>
-            </div>
-
-            <div className="flex items-center justify-between rounded-lg border border-border p-4">
-              <div>
-                <p className="font-medium text-foreground">User Permissions</p>
-                <p className="text-sm text-muted-foreground">Control role-based access</p>
-              </div>
-              <Button variant="outline">Edit</Button>
-            </div>
+            <p className="text-muted-foreground">System data will appear here once users and groups are created</p>
           </CardContent>
         </Card>
       </div>
