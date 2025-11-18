@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { mockNotices } from "@/lib/mockData";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Pin, ChevronLeft, ChevronRight } from "lucide-react";
@@ -7,7 +6,7 @@ import { Button } from "./ui/button";
 import { format } from "date-fns";
 
 export function NoticeCarousel() {
-  const pinnedNotices = mockNotices.filter((n) => n.isPinned);
+  const pinnedNotices: any[] = [];
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {

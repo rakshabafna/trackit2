@@ -1,6 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Task, mockUsers } from "@/lib/mockData";
+import { Task } from "@/lib/mockData";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback } from "./ui/avatar";
@@ -28,7 +28,6 @@ export function KanbanCard({ task, isDragging }: KanbanCardProps) {
     opacity: isDragging || isSortableDragging ? 0.5 : 1,
   };
 
-  const assignedUsers = mockUsers.filter((u) => task.assignees.includes(u.id));
   const isOverdue = new Date(task.dueDate) < new Date();
 
   return (
@@ -58,19 +57,6 @@ export function KanbanCard({ task, isDragging }: KanbanCardProps) {
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="flex -space-x-2">
-          {assignedUsers.slice(0, 3).map((user) => (
-            <Avatar key={user.id} className="h-6 w-6 border-2 border-background">
-              <AvatarFallback className="text-xs">{user.avatar}</AvatarFallback>
-            </Avatar>
-          ))}
-          {assignedUsers.length > 3 && (
-            <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-background bg-muted text-xs">
-              +{assignedUsers.length - 3}
-            </div>
-          )}
-        </div>
-
         <Badge variant="outline" className="text-xs">
           Sem {task.semester}
         </Badge>
