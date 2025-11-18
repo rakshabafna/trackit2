@@ -3,7 +3,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
-import { mockGroups } from "@/lib/mockData";
 
 interface JoinGroupModalProps {
   open: boolean;
@@ -23,21 +22,10 @@ export function JoinGroupModal({ open, onOpenChange }: JoinGroupModalProps) {
       return;
     }
 
-    // Mock validation
-    const group = mockGroups.find(g => g.id === "g1");
-    
-    if (!group) {
-      toast({
-        title: "Code not found",
-        description: "Please check the code and try again",
-        variant: "destructive",
-      });
-      return;
-    }
-
+    // TODO: Implement Supabase group join logic
     toast({
-      title: `Joined ${group.name}!`,
-      description: `Group Code: ${code}`,
+      title: "Feature coming soon",
+      description: "Connect to your Supabase database to join groups",
     });
     
     setCode("");

@@ -9,7 +9,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { Task, mockTasks, mockUsers } from "@/lib/mockData";
+import { Task } from "@/lib/mockData";
 import { KanbanCard } from "./KanbanCard";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
@@ -30,9 +30,7 @@ interface KanbanBoardProps {
 }
 
 export function KanbanBoard({ groupId }: KanbanBoardProps) {
-  const [tasks, setTasks] = useState<Task[]>(
-    groupId ? mockTasks.filter((t) => t.groupId === groupId) : mockTasks
-  );
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const sensors = useSensors(
